@@ -8,13 +8,13 @@ Docker container based on the latest development version of Cantasn.
 
 ## Accepted environment variables
 
-- AUTH\_DEFAULT: which authentication strategy is preferred to use. local
+- `AUTH_DEFAULT`: which authentication strategy is preferred to use. local
   would be the most proper one probably.
-- DEFAULT\_USERNAME: username of default user account used when local
+- `DEFAULT_USERNAME`: username of default user account used when local
   authentication strategy is enabled. Defaults to cantas.
-- DEFAULT\_PASSWORD: password of default user account used when local
+- `DEFAULT_PASSWORD`: password of default user account used when local
   authentication strategy is enabled. Defaults to cantas.
-- REALM: realm used for constructing user's email. This is useful when
+- `REALM`: realm used for constructing user's email. This is useful when
   Kerberos authentication strategy is enabled.
 
 ## Dependencies
