@@ -1,0 +1,56 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+import json
+import os
+import sys
+
+from subprocess import call
+
+NODE = '/usr/bin/node'
+SETTINGS_EXAMPLE_FILENAME = 'settings.json.example'
+SETTINGS_FILENAME = 'settings.json'
+
+
+def adjust_settings():
+    '''Adjust settings properly for run within this container'''
+    with open(SETTINGS_EXAMPLE_FILENAME, 'r') as f:
+        settings = json.loads(f.read(), encoding='UTF-8')
+
+    settings['redis']['host'] = os.environ['REDIS_PORT_6379_TCP_ADDR']
+    settings['redis']['port'] = os.environ['REDIS_PORT_6379_TCP_PORT']
+    settings['mongodb']['host'] = os.environ['MONGO_PORT_27017_TCP_ADDR']
+    settings['mongodb']['port'] = os.environ['MONGO_PORT_27017_TCP_PORT']
+
+    auth_default = os.environ.get('AUTH_DEFAULT')
+    if auth_default is not None:
+        settings['auth']['default'] = auth_default
+
+    realm = os.environ.get('REALM')
+    if realm is not None:
+        settings['realm'] = realm
+
+    with open(SETTINGS_FILENAME, 'w+') as f:
+        f.write(json.dumps(settings))
+
+
+def initialize_user():
+    '''Add default user, ignore error when user already exists'''
+    default_username = os.environ.get('DEFAULT_USERNAME', 'cantas')
+    default_password = os.environ.get('DEFAULT_PASSWORD', 'cantas')
+    cmd = [NODE, 'scripts/addUser.js', default_username, default_password]
+    call(cmd)
+
+
+def launch():
+    adjust_settings()
+    initialize_user()
+
+    try:
+        call([NODE, 'app.js'])
+    except KeyboardInterrupt:
+        print 'Cantas ends. See you next time :)'
+
+
+if __name__ == '__main__':
+    launch()
