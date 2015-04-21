@@ -1,0 +1,27 @@
+#!/bin/sh
+
+docker ps -a | grep -q "redis"
+if [ x"$?" != "x0" ]; then
+    echo "Seems redis container is not running yet. I need redis"
+    exit 1
+fi
+
+docker ps -a | grep -q "mongo"
+if [ x"$?" != "x0" ]; then
+    echo "Seems mongo container is not running yet. I need mongo."
+    exit 1
+fi
+
+if [ x"$1" == "x" ]; then
+    echo "Which image do you want to run?"
+    echo
+    echo "Usage: run.sh image"
+    echo
+    exit 2
+fi
+
+docker run --name cantas \
+       --link redis:redis --link mongo:mongo \
+       --env AUTH_DEFAULT=local \
+       -p 3000:3000 --rm \
+       $1
