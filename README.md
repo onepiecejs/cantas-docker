@@ -24,7 +24,9 @@ launched.
 
 ## Run
 
-    docker run  -p 3000:3000 --link redis:redis --link mongo:mongo --rm --env AUTH_DEFAULT=local cantas:devel
+    docker run --name cantas-devel -p 3000:3000 \
+           --link redis:redis --link mongo:mongo --rm \
+           --env AUTH_DEFAULT=local cantas:devel
 
 This runs Cantas container tagged `cantas:devel` by `local` authentication
 strategy is enabled. And anyone is able to login as `cantas:cantas`.
