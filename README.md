@@ -1,34 +1,42 @@
 # Docker container of Cantas
 
-Docker container based on the latest development version of Cantasn.
+Docker container based on the latest development version of Cantas.
 
 ## Make image
 
     docker build -t [tag-you-prefer] .
 
-## Accepted environment variables
+## Environment Variables
 
-- `AUTH_DEFAULT`: which authentication strategy is preferred to use. local
-  would be the most proper one probably.
-- `DEFAULT_USERNAME`: username of default user account used when local
-  authentication strategy is enabled. Defaults to cantas.
-- `DEFAULT_PASSWORD`: password of default user account used when local
-  authentication strategy is enabled. Defaults to cantas.
-- `REALM`: realm used for constructing user's email. This is useful when
-  Kerberos authentication strategy is enabled.
+- `AUTH_DEFAULT`: Preferred authentication strategy. The best default
+  choice is probably `local`.
+- `DEFAULT_USERNAME`: The username to use with the local authentication
+  strategy. Defaults to `cantas`.
+- `DEFAULT_PASSWORD`: The password to use with the local authentication
+  strategy. Defaults to cantas.
+- `REALM`: The realm used for constructing the user's email. This is useful
+  when the Kerberos authentication strategy is selected.
 
 ## Dependencies
 
-Both `redis` and `mongodb` should be running before Cantas container is
+Both `redis` and `mongodb` should be running before the Cantas container is
 launched.
 
 ## Run
+
+You can use the `run` script in this directory to start the Cantas container.
+The script expects the tag for your cantas container as its only argument.
+
+    ./run <tag>
+
+Alternately, you can manually execute the docker command as follows:
 
     docker run --name cantas-devel -p 3000:3000 \
            --link redis:redis --link mongo:mongo --rm \
            --env AUTH_DEFAULT=local cantas:devel
 
-This runs Cantas container tagged `cantas:devel` by `local` authentication
-strategy is enabled. And anyone is able to login as `cantas:cantas`.
+In both cases, this runs Cantas container tagged `cantas-devel` with the `local`
+authentication strategy enabled. Anyone is able to login as `cantas` with the
+password `cantas`.
 
-Open your Web browser, then navigate to `http://127.0.0.1:3000/`.
+Access it in your Web browser at `http://127.0.0.1:3000/`.
